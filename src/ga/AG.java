@@ -28,8 +28,11 @@ public class AG {
         TxMut = TMut;
         NumCiclos = Ciclos;
         CriarPop();
-        Aptidao = Aptidao(Pop);
-        AptidaoR = AptidaoRelativa(Aptidao);
+        //Aptidao = Aptidao(Pop);
+        //AptidaoR = AptidaoRelativa(Aptidao);
+        Aptidao = new double[Pop.length];
+        AptidaoR = new double[Pop.length];
+        CalcFuncao(); 
         
         
     }
@@ -145,7 +148,7 @@ public class AG {
         //System.out.println("=" + this.TamPop * (1 - this.TxRep));
         for (int i = 0; i < (int) this.TamPop * (1 - this.TxRep); i++) {
             //System.out.println("i=" + i);
-            this.NovaPop[(this.TamPop - 1) - i] = this.Pop[r.nextInt(100)];
+            this.NovaPop[(this.TamPop - 1) - i] = this.Pop[r.nextInt(TamPop)];
 
         }
 
@@ -264,14 +267,78 @@ public class AG {
         int MaiorFxid = MaiorFx();
         System.out.println("Valor da maior aptidão =" + Aptidao[MaiorFxid]);
         for (int i = 0; i < NumCiclos; i++) {
-            System.out.println("ComecaRepro");
+            //System.out.println("ComecaRepro");
             Selecao();
             Cruzamento();
             Mutacao();
-            Aptidao = Aptidao(Pop);
-            AptidaoR = AptidaoRelativa(Aptidao);
+            //Aptidao = Aptidao(Pop);
+            //AptidaoR = AptidaoRelativa(Aptidao);
+            CalcFuncao();
             MaiorFxid = MaiorFx();
-            System.out.println("Valor da maior aptidão =" + Aptidao[MaiorFxid]);
+            System.out.println("Valor da maior aptidão =" + (Aptidao[MaiorFxid]));
         }
     }
+    
+    
+       public double[] BinarioReal(int[] N){
+        
+       double[] Preal= new double[2];       
+       double Pint=0; //double Pfrac=0.0;
+       int exp=TamInd-1;          //21;  
+       for(int x=0;x<=(TamInd-1);x++){ //21
+        Pint=Pint+( N[x]*Math.pow(2,exp) );
+        exp--;
+       }
+       
+       Preal[0] = Pint;
+       //término da transformação do primeiro número
+       
+       Pint=0; //Pfrac=0;
+       exp=TamInd-1;
+       for(int x=22;x<=(2*TamInd-1);x++){ //43
+        Pint=Pint+( N[x]*Math.pow(2,exp) );
+        exp--;
+       }
+       
+       Preal[1] = Pint;
+       for(int id=0;id<Preal.length;id++){
+           Preal[id]=((Max-Min)/(Math.pow(2,TamInd)-1)) * Preal[id] + Min;
+       }
+       
+       return(Preal);
+        
+    }
+    
+
+    public double Funcao(double[] xy){
+        
+       double fx; 
+      
+        fx = Math.abs(xy[0] * xy[1] * (Math.sin((xy[1] * Math.PI) / 4)));
+        return (fx);
+        
+    }
+    
+    public void CalcFuncao(){
+        double somatorio=0; 
+        double[] Fid = new double[Aptidao.length];
+        for(int x=0;x<Pop.length;x++){
+            Aptidao[x]=Funcao( BinarioReal( Pop[x] )  );           
+            somatorio=somatorio+Aptidao[x];
+        }
+        
+        for(int x=0;x<Aptidao.length;x++){
+              
+            AptidaoR[x]=Aptidao[x]/somatorio;
+            
+        }
+        Fid[0]=AptidaoR[0];
+        for(int x=1;x<AptidaoR.length;x++){
+              
+            Fid[x]=Fid[x-1]+AptidaoR[x];
+            
+        }
+        AptidaoR=Fid;
+    }
+   
 }
