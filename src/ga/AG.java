@@ -5,6 +5,8 @@
 package ga;
 
 import com.sun.org.apache.xerces.internal.impl.xpath.regex.Match;
+
+import java.io.PrintStream;
 import java.util.Random;
 
 /**
@@ -30,8 +32,6 @@ public class AG {
         CriarPop();
         Aptidao = Aptidao(Pop);
         AptidaoR = AptidaoRelativa(Aptidao);
-        
-        
     }
 
     public void CriarPop() {
@@ -273,5 +273,38 @@ public class AG {
             MaiorFxid = MaiorFx();
             System.out.println("Valor da maior aptidão =" + Aptidao[MaiorFxid]);
         }
+    }
+    
+    public double[] getMaioresAptidao(int numeroDeMaiores){
+    	double[] copiaVetorAptidao = new double[this.TamPop];
+    	System.arraycopy(this.Aptidao, 0, copiaVetorAptidao, 0, this.Aptidao.length);
+    	double[] maioresAptidao = new double[numeroDeMaiores];
+    	
+    	int indiceMaior = 0;
+    	for (int i = 0; i < numeroDeMaiores; i++) {
+			for (int j = 1; j < copiaVetorAptidao.length; j++) {
+				indiceMaior = copiaVetorAptidao[j] > copiaVetorAptidao[indiceMaior] ? j : indiceMaior; 
+			}
+			maioresAptidao[i] = copiaVetorAptidao[indiceMaior];
+			copiaVetorAptidao[indiceMaior] = -1;
+		}
+    	
+    	return maioresAptidao;
+    } 
+    
+    public double getMediaMaioresAptidao (double[] maioresAptidao) {
+    	double totalAptidao = 0;
+    	for (int i = 0; i < maioresAptidao.length; i++) {
+			totalAptidao += maioresAptidao[i];
+		}
+    	return totalAptidao/maioresAptidao.length;
+    }
+    
+    public void printMaioresAptidaoEMedia (PrintStream saida, int numeroDeMaiores) {
+    	double[] maioresAptidao = this.getMaioresAptidao(numeroDeMaiores);
+		for (int i = 0; i < maioresAptidao.length; i++) {
+			saida.println("Maior["+(i+1)+"] = "+ maioresAptidao[i]);
+		}
+		saida.println("Média: " + this.getMediaMaioresAptidao(maioresAptidao));
     }
 }
