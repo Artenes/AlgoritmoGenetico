@@ -4,6 +4,8 @@
  */
 package ga;
 
+import java.io.IOException;
+
 /**
  *
  * @author BKP
@@ -14,9 +16,14 @@ public class NewMain {
 	public static void main(String[] args) {
 		AG PrimeiroAG;
 		PrimeiroAG = new AG(0.60,0.03,100);  
-		PrimeiroAG.novaGeracao();  
-		//PrimeiroAG.novaGeracao2();  Outra Forma de Seleção e Cruzamento
-		PrimeiroAG.printMaioresAptidaoEMedia(System.out, 10);
+		//PrimeiroAG.novaGeracao();  
+		PrimeiroAG.novaGeracao2();  //Outra Forma de Seleção e Cruzamento
+		try {
+			PrimeiroAG.printMaioresAptidaoEMedia(10);
+		} catch (IOException e) {
+			System.out.println(e.getMessage());
+		}
+		
 	}
 
 	public static int BinarioInt(int[] ind){
